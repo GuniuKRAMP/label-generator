@@ -3,10 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://guniukramp.github.io/label-generator/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy" : "gh-pages -d dist"
   },
   "dependencies": {
     "@syncfusion/ej2-vue-barcode-generator": "^26.1.42",
@@ -17,6 +19,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",
+    "gh-pages": "^6.1.1",
     "vite": "^5.3.1"
   }
 }
