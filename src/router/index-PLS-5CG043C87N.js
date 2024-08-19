@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
-import About from '../views/About.vue';
+import Labels50x37 from '../views/Labels100x37View.vue';
 
 const routes = [
   {
@@ -9,9 +9,9 @@ const routes = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
-    component: About
+    path: '/labels50x37',
+    name: 'Labels50x37',
+    component: Labels50x37
   }
 ];
 
