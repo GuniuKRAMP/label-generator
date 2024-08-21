@@ -1,21 +1,23 @@
 <script setup>
-import TheBarcode from './TheBarcode.vue';
+import TheBarcode from '../TheBarcode.vue';
 
 const props = defineProps({
     data: Object,
 })
+
 </script>
 <template>
     <div class="label">
         <div class="top-part">
-            <p v-if="data.index" id="index" class="index">{{data.index}}</p>
-            <p v-else id="date" class="date">BRAK INDEKSU</p>
+            <p v-if="data.index" id="index" class="index">{{data.index.toUpperCase()}}</p>
+            <p v-else id="index" class="index">BRAK INDEKSU</p>
+            <p id="date" class="date">{{ data.created }}</p>
         </div>
-        <h4 v-if="data.name" id="index-name" class="index-name">{{ data.name }}</h4>
-        <h4 v-else id="index-name" class="index-name">BRAK NAZWY</h4>
+        <h4 v-if="data.name "id="index-name" class="index-name">{{ data.name }}</h4>
+        <h4 v-else class="index-name">BRAK NAZWY</h4>
         <div class="center-part">
             <p id="price" class="price">{{ data.price }}</p>
-            <span id="unit" class="unit"><b>{{ data.unit }}</b> w tym <b>23%</b> VAT</span>
+            <span id="unit" class="unit"><b>{{ data.unit }}</b> w tym <b>{{data.vat}}%</b> VAT</span>
         </div>
         <!-- <div class="bottom-part">
             <p class="text"></p>
@@ -32,8 +34,8 @@ const props = defineProps({
 
 <style scoped>
 .label {
-    width: 105mm;
-    height: 41mm;
+    width: 49.5mm;
+    height: 37mm;
     padding: 5px;
     background-color: #fff;
     border: 1px dotted black;
@@ -47,9 +49,9 @@ const props = defineProps({
 }
 
 .center-part {
-    min-height: 40px;
     display: flex;
     justify-content: center;
+    position: relative;
 }
 
 .bottom-part {
@@ -61,7 +63,7 @@ const props = defineProps({
 
 .index {
     margin-left: 5px;
-    font-size: 13px;
+    font-size: 10px;
     font-weight: bold;
 }
 
@@ -71,22 +73,23 @@ const props = defineProps({
 
 .index-name {
     height: 25px;
-    font-size: 15px;
-    text-align: left;
+    font-size: 10px;
+    margin-left: 5px;
     font-weight: normal;
-    margin: 0 0 10px 5px;
+    margin-bottom: 5px;
 }
 
 .price {
-    font-size: 28px;
+    font-size: 20px;
     font-weight: bold;
 }
 
 .unit {
-    width: 40px;
-    height: 10px;
+    width: 30px;
     margin-left: 5px;
-    font-size: 10px;
+    font-size: 7px;
+    /* transform: translateY(11px); */
+    z-index: 9;
 }
 
 .text,
@@ -96,17 +99,22 @@ const props = defineProps({
     margin-right: 2px;
     height: 7px;
 }
+.barcode128 {
+    font-family: "Libre Barcode 128", system-ui;
+    font-size: 10px;
+    margin-bottom: -12px;
+}
 .barcode-container {
     width: 100%;
-    height: 42px;
+    height: 50px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
 .quantity{
     text-align: right;
     font-size: 8px;
 }
 </style>
+

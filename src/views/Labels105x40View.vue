@@ -1,57 +1,60 @@
 <script setup>
-import { ref, watch } from 'vue';
-import SubpageHeader from '../components/SubpageHeader.vue'
-import NoLabelsInfo from '../components/NoLabelsInfo.vue';
-import TheLabel105x40 from '../components/TheLabel105x40.vue';
-import Lables105x40ForPrinting from '../components/Lables105x40ForPrinting.vue';
+import { ref, watch } from "vue";
+import SubpageHeader from "../components/SubpageHeader.vue";
+import NoLabelsInfo from "../components/NoLabelsInfo.vue";
+import TheLabel105x40 from "../components/Label105x40/TheLabel105x40.vue";
+import Lables105x40ForPrinting from "../components/Label105x40/Lables105x40ForPrinting.vue";
 
-const generatedLabales = ref([])
+const generatedLabales = ref([]);
 const isVisible = ref(true);
 const trashIconIsVisible = ref(false);
+const labelsPerPage = ref(14);
 
 const formData = ref({
   id: Math.random(),
-  index: '123-123',
-  created: new Date().toLocaleDateString('en-GB'),
-  name: "Złącze Superseal 2-pin kpl. męskie wtyczka z okablowaniem 20 cm",
+  index: null,
+  created: new Date().toLocaleDateString("en-GB"),
+  name: "",
   price: 15,
   unit: "PLN",
-  quantity: "SZT"
-})
+  vat: 23,
+  quantity: "SZT",
+});
 
 function addingLabelToArray() {
-  if(generatedLabales.value.length < 14) {
+  if (generatedLabales.value.length < labelsPerPage.value) {
     // adding created label to the list generatedLabels
-    generatedLabales.value.push(formData.value)
+    generatedLabales.value.push(formData.value);
     //cleaning the object formData
     formData.value = {
       id: Math.random(),
-      index: '',
-      created: new Date().toLocaleDateString('en-GB'),
-      name: '',
+      index: "",
+      created: new Date().toLocaleDateString("en-GB"),
+      name: "",
       price: 0,
       unit: "PLN",
-      quantity: "SZT"
-    }
+      vat: 23,
+      quantity: "SZT",
+    };
   } else {
-    alert("Przekroczono limit etykiet na stronę!")
+    alert("Przekroczono limit etykiet na stronę!");
     return;
   }
 }
 
 function removeLabelById(id) {
-  const index = generatedLabales.value.findIndex(label => label.id === id);
+  const index = generatedLabales.value.findIndex((label) => label.id === id);
   if (index !== -1) {
     generatedLabales.value.splice(index, 1);
   }
 }
 
 function printingPage() {
-  if(isVisible.value) {
+  if (isVisible.value) {
     isVisible.value = !isVisible.value;
     toggleTrashIcon();
     setTimeout(() => {
-      window.print()
+      window.print();
       isVisible.value = !isVisible.value;
       toggleTrashIcon();
     }, 200);
@@ -62,52 +65,92 @@ function printingPage() {
 const toggleTrashIcon = () => {
   trashIconIsVisible.value = !trashIconIsVisible.value;
 };
-watch(() => formData.value.index, (newValue) => {
-  if (!newValue) {
-    formData.value.index = null;
+watch(
+  () => formData.value.index,
+  (newValue) => {
+    if (!newValue) {
+      formData.value.index = null;
+    }
   }
-});
-
-
+);
 </script>
 <template>
+  <div class="container">
     <div class="main" v-if="isVisible">
-      <SubpageHeader>
-        Etykiety 105x40mm
-      </SubpageHeader>
+      <SubpageHeader> Etykiety 105x40mm </SubpageHeader>
       <div class="main-inner">
-        <div class="view-section" >
-          <img style="width: 190px;" src="../assets//logo-customer-kramp.jpg" alt="company-logo">
-          <h4 style="margin-top: 80px; margin-bottom:10px">PODGLĄD ETYKIETY</h4>
-          <TheLabel105x40 :data="formData"/>
+        <div class="view-section">
+          <img
+            style="width: 190px"
+            src="../assets//logo-customer-kramp.jpg"
+            alt="company-logo"
+          />
+          <h4 style="margin-top: 80px; margin-bottom: 10px">
+            PODGLĄD ETYKIETY
+          </h4>
+          <TheLabel105x40 :data="formData" />
         </div>
         <div class="form-section">
-          <h4 style="margin-bottom: 20px;">WYPEŁNIJ POLA</h4>
-          <form class="form"@submit.prevent="addingLabelToArray">
+          <h4 style="margin-bottom: 20px">WYPEŁNIJ POLA</h4>
+          <form class="form" @submit.prevent="addingLabelToArray">
             <div class="form-text-field">
-              <input type="text" v-model="formData.index" required="" autocomplete="off">
+              <input
+                type="text"
+                v-model="formData.index"
+                required=""
+                autocomplete="off"
+              />
               <label>Index</label>
             </div>
             <div class="form-text-field">
-              <input type="text" v-model="formData.name" maxlength="120"required="" autocomplete="off">
+              <input
+                type="text"
+                v-model="formData.name"
+                maxlength="120"
+                required=""
+                autocomplete="off"
+              />
               <label>Nazwa</label>
             </div>
             <div class="form-text-field">
-              <input type="text" v-model="formData.price" required="" autocomplete="off">
+              <input
+                type="number"
+                v-model="formData.price"
+                required
+                step="0.01"
+                autocomplete="off"
+              />
               <label>Cena</label>
             </div>
-            <div class="select-input">
+            <!-- <div class="select-input">
               <label for="price">Waluta</label>
               <select id="price" v-model="formData.unit">
                 <option value="PLN">PLN</option>
                 <option value="EUR">EUR</option>
+              </select>
+            </div> -->
+            <div class="select-input">
+              <label for="vat">VAT</label>
+              <select id="vat" v-model="formData.vat">
+                <option value="8">8%</option>
+                <option value="23">23%</option>
               </select>
             </div>
             <div class="select-input">
               <label for="quantity">Ilość na:</label>
               <select id="quantity" v-model="formData.quantity">
                 <option value="SZT">SZT</option>
-                <option value="OPA">OPA</option>
+                <option value="KG">KG</option>
+                <option value="L">Litr</option>
+                <option value="M">M</option>
+                <option value="MB">MB</option>
+                <option value="OP">OP</option>
+                <option value="PARA">PARA</option>
+                <option value="BOT">BOT</option>
+                <option value="CAN">CAN</option>
+                <option value="JS">JS</option>
+                <option value="KPL">KPL</option>
+                <option value="KRT">KRT</option>
               </select>
             </div>
             <button type="submit">Dodaj Etykiete</button>
@@ -117,17 +160,25 @@ watch(() => formData.value.index, (newValue) => {
     </div>
     <div v-if="generatedLabales.length !== 0" class="result-section">
       <h2 v-if="isVisible">Podgląd wydruku:</h2>
-      <button v-if="isVisible" style="margin-bottom: 10px" @click="printingPage()">
+      <button
+        v-if="isVisible"
+        style="margin-bottom: 10px"
+        @click="printingPage()"
+      >
         <span v-if="isVisible">Drukuj etykiety</span>
         <!-- <span v-else>Edytuj wydruk</span> -->
       </button>
-      <Lables105x40ForPrinting :labels="generatedLabales" :trashIconIsVisible="trashIconIsVisible" @remove-label="removeLabelById"/>
+      <Lables105x40ForPrinting
+        :labels="generatedLabales"
+        :trashIconIsVisible="trashIconIsVisible"
+        @remove-label="removeLabelById"
+      />
     </div>
     <div v-else class="result-section">
-      <NoLabelsInfo/>
+      <NoLabelsInfo />
     </div>
+  </div>
 </template>
-
 
 <style scoped>
 h2 {
@@ -144,27 +195,28 @@ button {
   padding: 10px;
   font-size: 14px;
   font-weight: 600;
-  transition: background-color .2s ease-in-out;
+  transition: background-color 0.2s ease-in-out;
   text-transform: uppercase;
 
   &:hover {
     background-color: #e0e0e0;
   }
 }
-.main{
+.main {
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-.main-inner{
+.main-inner {
   width: 100%;
   display: flex;
   justify-content: center;
   gap: 70px;
 }
-.view-section, .form-section{
-    margin-top: 30px;
+.view-section,
+.form-section {
+  margin-top: 30px;
   margin-bottom: 30px;
   display: flex;
   flex-direction: column;
@@ -175,12 +227,14 @@ button {
   border-radius: 5px;
   box-shadow: 0 0 7px 0px black;
 }
-.form{
+.form {
   max-width: 500px;
   display: flex;
   flex-direction: column;
 }
-.form input, .form select, .form textarea {
+.form input,
+.form select,
+.form textarea {
   margin-bottom: 20px;
 }
 
@@ -211,8 +265,8 @@ button {
   color: rgb(100, 100, 100);
 }
 
-.form-text-field :is(input:focus, input:valid)~label {
-  transform: translateY(-60%) scale(.9);
+.form-text-field :is(input:focus, input:valid) ~ label {
+  transform: translateY(-60%) scale(0.9);
   margin: 0em;
   margin-left: 0.8em;
   padding: 0.2em;
@@ -224,7 +278,7 @@ button {
 }
 
 /* SELECT INPUT */
-.select-input{
+.select-input {
   width: 100%;
   position: relative;
 }
@@ -236,8 +290,9 @@ button {
   background-color: transparent;
   border-radius: 10px;
   width: 100%;
+  cursor: pointer;
 }
-.select-input label{
+.select-input label {
   font-size: 100%;
   position: absolute;
   left: 0;
@@ -245,14 +300,14 @@ button {
   margin-left: 0.5em;
   pointer-events: none;
   transition: all 0.3s ease;
-  transform: translateY(-60%) scale(.9);
+  transform: translateY(-60%) scale(0.9);
   color: rgb(100, 100, 100);
   margin-left: 0.8em;
   padding: 0.4em;
   background-color: #f8f8f8;
 }
-.select-input :is(input:focus, input:valid)~label {
-  transform: translateY(-60%) scale(.9);
+.select-input :is(input:focus, input:valid) ~ label {
+  transform: translateY(-60%) scale(0.9);
   margin: 0em;
   margin-left: 0.8em;
   padding: 0.2em;
@@ -270,6 +325,5 @@ button {
   align-items: center;
   background-color: #ffffff23;
   border-radius: 8px;
-  padding: 10px;
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup>
-import TheBarcode from './TheBarcode.vue';
+import TheBarcode from '../TheBarcode.vue';
 
 const props = defineProps({
     data: Object,
@@ -8,7 +8,7 @@ const props = defineProps({
 <template>
     <div class="label">
         <div class="top-part">
-            <p v-if="data.index" id="index" class="index">{{data.index}}</p>
+            <p v-if="data.index" id="index" class="index">{{data.index.toUpperCase()}}</p>
             <p v-else id="index" class="index">BRAK INDEKSU</p>
         </div>
         <h4 v-if="data.name" id="index-name" class="index-name">{{ data.name }}</h4>

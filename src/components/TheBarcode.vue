@@ -30,7 +30,7 @@ const props = defineProps({
     displayValue: {
       type: Boolean,
       default: true
-    }
+    },
 })
 const barcode = ref('');
 
